@@ -54,21 +54,6 @@ namespace Blog.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            base.OnActionExecuting(context);
-
-            if (User.Identity.IsAuthenticated)
-            {
-                var user = _userManager.GetUserAsync(User).Result;
-                ViewBag.UserName = user?.UserName ?? "Guest"; 
-            }
-            else
-            {
-                ViewBag.UserName = "Guest";
-            }
-        }
-
 
 
     }

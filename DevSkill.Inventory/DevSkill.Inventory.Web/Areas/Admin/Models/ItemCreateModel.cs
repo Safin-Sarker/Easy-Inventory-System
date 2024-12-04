@@ -16,7 +16,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Models
 
         public string? Description { get; set; }
 
-        public string? ItemCode { get; set; }
+        public string? ProductCode { get; set; }
 
         public string? UnitOfMeasure { get; set; }
 

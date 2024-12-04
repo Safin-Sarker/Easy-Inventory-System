@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DevSkill.Inventory.Application.Services;
+using DevSkill.Inventory.Application.Services.ImageManagement_Service;
 using DevSkill.Inventory.Domain;
 using DevSkill.Inventory.Domain.Dtos;
 using DevSkill.Inventory.Domain.Entities;
@@ -21,18 +22,21 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
         private readonly ILogger<ItemController> _logger;
         private readonly IItemManagementService _itemManagementService;
         private readonly IWarehouseManagementService _warehouseManagementService;
+        private readonly IImageManagementService _imageManagementService;
         private readonly IMapper _mapper;
         private readonly IStockManagementService _stockManagementService;
 
         public ItemController(ILogger<ItemController> logger,
             IItemManagementService itemManagementService,
             IWarehouseManagementService warehouseManagementService,
+            IImageManagementService imageManagementService,
             IMapper mapper,
             IStockManagementService stockManagementService)
         {
             _logger = logger;
             _itemManagementService = itemManagementService;
             _warehouseManagementService = warehouseManagementService;
+            _imageManagementService = imageManagementService;
             _mapper = mapper;
             _stockManagementService = stockManagementService;
         }
@@ -125,7 +129,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
 
         [HttpPost]
-        [ValidateAntiForgeryToken, Authorize(Policy = "CanCreateItem")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = "CanCreateItem")]
         public async Task<IActionResult> Create(ItemCreateModel model, string commit)
         {
             if (ModelState.IsValid)
@@ -135,21 +140,14 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
                 try
                 {
+                    // Use Cloudinary for image upload
                     if (model.Image != null && model.Image.Length > 0)
                     {
-
-                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/items");
-                        Directory.CreateDirectory(uploadsFolder); 
-
-                        var uniqueFileName = $"{newItem.Id}_{Path.GetFileName(model.Image.FileName)}";
-                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        var imageUrl = await _imageManagementService.UploadAsync(model.Image);
+                        if (!string.IsNullOrEmpty(imageUrl))
                         {
-                            await model.Image.CopyToAsync(fileStream);
+                            newItem.Image = imageUrl; // Save the URL returned from Cloudinary
                         }
-
-                        newItem.Image = $"/images/items/{uniqueFileName}";
                     }
 
                     await _itemManagementService.CreateItemAsync(newItem);
@@ -174,7 +172,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                         }
                     }
 
-
                     TempData.Put("ResponseMessage", new ResponseModel
                     {
                         Message = "Product Created Successfully",
@@ -190,7 +187,6 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                 }
                 catch (Exception ex)
                 {
-
                     TempData.Put("ResponseMessage", new ResponseModel
                     {
                         Message = "Product Creation Failed",
@@ -228,36 +224,17 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
                         });
                         return RedirectToAction("Index");
                     }
+
                     _mapper.Map(model, existingItem);
 
+                    // Use Cloudinary for updating the image
                     if (model.NewImage != null && model.NewImage.Length > 0)
                     {
-       
-                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/items");
-                        Directory.CreateDirectory(uploadsFolder); 
-
-                        
-                        var uniqueFileName = $"{existingItem.Id}_{Path.GetFileName(model.NewImage.FileName)}";
-                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                       
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        var imageUrl = await _imageManagementService.UploadAsync(model.NewImage);
+                        if (!string.IsNullOrEmpty(imageUrl))
                         {
-                            await model.NewImage.CopyToAsync(fileStream);
+                            existingItem.Image = imageUrl; // Replace the image URL with the new one
                         }
-
-                   
-                        if (!string.IsNullOrEmpty(existingItem.Image))
-                        {
-                            var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", existingItem.Image.TrimStart('/'));
-                            if (System.IO.File.Exists(oldImagePath))
-                            {
-                                System.IO.File.Delete(oldImagePath);
-                            }
-                        }
-
-
-                        existingItem.Image = $"/images/items/{uniqueFileName}";
                     }
 
                     await _itemManagementService.UpdateItemAsync(existingItem);
@@ -287,6 +264,7 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Controllers
 
             return View(model);
         }
+
 
 
         [HttpPost, ValidateAntiForgeryToken,Authorize(Policy = "CanDeleteItem")]

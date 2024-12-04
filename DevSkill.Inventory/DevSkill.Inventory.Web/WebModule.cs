@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using DevSkill.Inventory.Application;
 using DevSkill.Inventory.Application.Services;
+using DevSkill.Inventory.Application.Services.ImageManagement_Service;
 using DevSkill.Inventory.Application.Services.RoleManagementService;
 using DevSkill.Inventory.Application.Services.StockConsumption;
 using DevSkill.Inventory.Application.Services.StockProduction;
@@ -104,8 +105,12 @@ namespace DevSkill.Inventory.Web
            .InstancePerLifetimeScope();
 
             builder.RegisterType<UserRepository>()
-             .As<IUserRepository>()
+            .As<IUserRepository>()
              .InstancePerLifetimeScope();
+
+            builder.RegisterType<ImageManagementService>()
+         .As<IImageManagementService>()
+         .InstancePerLifetimeScope();
 
 
         }

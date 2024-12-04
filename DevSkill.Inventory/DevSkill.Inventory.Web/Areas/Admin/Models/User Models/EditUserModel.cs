@@ -24,8 +24,8 @@ namespace DevSkill.Inventory.Web.Areas.Admin.Models.User_Models
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Display(Name = "Contact Number")]
-        public string ContactNo { get; set; }
+
+        public string? ContactNo { get; set; }
 
         [Display(Name = "Status")]
         public string Status { get; set; }
