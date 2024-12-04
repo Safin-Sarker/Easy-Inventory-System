@@ -1,0 +1,197 @@
+﻿@model DevSkill.Inventory.Web.Areas.Admin.Models.StockTransferModels.StockTransferCreateModel
+
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title"><i class="fa-solid fa-pen-to-square" style="margin-right: 8px;"></i><b>New Stock Transfer</b></h1>
+    </div>
+    <partial name="_ResponsePartial" />
+
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-md-4 col-form-label">Voucher Number</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" asp-for="VoucherNumber" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="SourceWarehouseId" class="col-md-4 col-form-label">Source Warehouse <span class="text-danger">*</span></label>
+                        <div class="col-md-8">
+                            <select asp-for="SourceWarehouseId" class="form-control" asp-items="Model.SourceWarehouses" id="sourceWarehouseSelect">
+                                <option value="">Select Source Warehouse</option>
+                            </select>
+                            <span asp-validation-for="SourceWarehouseId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="VoucherDate" class="col-md-4 col-form-label">Voucher Date</label>
+                        <div class="col-md-8">
+                            <input type="date" class="form-control" asp-for="VoucherDate" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        
+            <!-- Table for adding products -->
+            <div class="table-responsive mt-4">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Products</th>
+                            <th>Transfer Quantity</th>
+                            <th>Destination Warehouse</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transferRows">
+                        <!-- Dynamically added transfer rows will appear here -->
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-secondary btn-sm" id="addRow">+ New Row</button>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="Details" class="col-md-4 col-form-label">Details</label>
+                        <div class="col-md-8">
+                            <textarea class="form-control" rows="3" asp-for="Details"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input asp-for="CreatedBy" type="hidden" />
+
+            <div class="row mt-4">
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-success mx-2">Save</button>
+                    <a href="@Url.Action("Index")" class="btn btn-danger mx-2">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+</div>
+
+@section Scripts {
+<script>
+        let rowIdx = 0;
+        let selectedSourceWarehouseId = null;
+
+        // Load products and destination warehouses only for the selected source warehouse for each new row
+        $('#sourceWarehouseSelect').on('change', function () {
+            selectedSourceWarehouseId = $(this).val();
+            if (!selectedSourceWarehouseId) {
+                clearProductAndDestinationDropdowns();
+            }
+        });
+
+        // Add a new row to the transfer table
+        $('#addRow').on('click', function () {
+            if (!selectedSourceWarehouseId) {
+                alert('Please select a source warehouse first.');
+                return;
+            }
+
+            const newRow = `<tr>
+                <td>
+                    <select name="TransferItems[${rowIdx}].ProductId" class="form-control productSelect" data-row-index="${rowIdx}" required>
+                        <option value="">Loading...</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" name="TransferItems[${rowIdx}].Quantity" class="form-control" required min="1" placeholder="Quantity" />
+                </td>
+                <td>
+                    <select name="TransferItems[${rowIdx}].DestinationWarehouseId" class="form-control destinationWarehouseSelect" data-row-index="${rowIdx}" required>
+                        <option value="">Loading...</option>
+                    </select>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm removeRow"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            </tr>`;
+
+            $('#transferRows').append(newRow);
+
+            // Load products and destinations for the new row
+            loadProductsForWarehouse(selectedSourceWarehouseId, rowIdx);
+            loadDestinationWarehouses(selectedSourceWarehouseId, rowIdx);
+
+            rowIdx++;
+        });
+
+        // Remove a row when the delete button is clicked
+        $(document).on('click', '.removeRow', function () {
+            $(this).closest('tr').remove();
+        });
+
+        // AJAX call to load products for the selected source warehouse for a specific row
+        function loadProductsForWarehouse(warehouseId, rowIndex) {
+            $.ajax({
+                url: '@Url.Action("GetItemsByWarehouse", "StockTransfer", new { area = "Admin" })',
+                type: "GET",
+                data: { warehouseId: warehouseId },
+                success: function (products) {
+                    const productSelect = $(`select[name="TransferItems[${rowIndex}].ProductId"]`);
+                    productSelect.empty().append('<option value="">Select Product</option>');
+                    products.forEach(product => {
+                        productSelect.append(`<option value="${product.id}">${product.name}</option>`);
+                    });
+                },
+                error: function () {
+                    alert("Error loading products for the selected warehouse.");
+                }
+            });
+        }
+
+        // AJAX call to load destination warehouses excluding the selected warehouse for a specific row
+        function loadDestinationWarehouses(excludeWarehouseId, rowIndex) {
+            $.ajax({
+                url: '@Url.Action("GetAllWarehousesExcept", "StockTransfer", new { area = "Admin" })',
+                type: "GET",
+                data: { excludeWarehouseId: excludeWarehouseId },
+                success: function (warehouses) {
+                    const destinationSelect = $(`select[name="TransferItems[${rowIndex}].DestinationWarehouseId"]`);
+                    destinationSelect.empty().append('<option value="">Select Destination Warehouse</option>');
+                    warehouses.forEach(warehouse => {
+                        destinationSelect.append(`<option value="${warehouse.id}">${warehouse.name}</option>`);
+                    });
+                },
+                error: function () {
+                    alert("Error loading destination warehouses.");
+                }
+            });
+        }
+
+        // Clear product and destination dropdowns when no source warehouse is selected
+        function clearProductAndDestinationDropdowns() {
+            $('#transferRows').empty();
+            rowIdx = 0;
+        }
+
+</script>
+
+
+
+}
+
+
+
+
+

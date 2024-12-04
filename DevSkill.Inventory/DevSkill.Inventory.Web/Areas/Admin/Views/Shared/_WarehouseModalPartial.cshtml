@@ -1,0 +1,91 @@
+﻿@model ItemCreateModel
+@{
+    ViewData["Title"] = "_WarehouseModalPartial";
+}
+
+@section Styles
+{
+    <style>
+        .modal.fade:not(.in).right .modal-dialog {
+            -webkit-transform: translate3d(25%, 0, 0);
+            transform: translate3d(25%, 0, 0);
+        }
+    </style>
+}
+
+<!-- Warehouse Details Modal -->
+<div class="modal fade right" id="warehouseModal" tabindex="-1" aria-labelledby="warehouseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="warehouseModalLabel"><i class="fas fa-warehouse me-2 mt-2"></i>Warehouse Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="warehouseForm">
+                <!-- Content inside the modal -->
+                <div class="alert alert-warning">
+                    Please fill this form without any mistakes as it cannot be edited afterward when the product is already created. You can create a new Warehouse in Company Settings → Inventory → New Warehouse.
+                </div>
+
+                <!-- Warehouse Table -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                                <th class="text-center" style="width: 15%;">Select <span class="text-danger">*</span></th>
+                            <th class="text-center" style="width: 30%;">Warehouse </th>
+                                <th class="text-center" style="width: 25%;">Quantity <span class="text-danger">*</span></th>
+                            <th class="text-center" style="width: 30%;">Unit Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Warehouses.Count; i++)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <!-- Use only one checkbox input for `IsSelected` and make sure it has the proper class -->
+                                    <input type="checkbox" asp-for="Warehouses[i].IsSelected" class="form-check-input warehouse-checkbox" />
+                                </td>
+                                <td class="text-center">
+                                    <!-- Correctly bind the `Id` to ensure it's passed to the server -->
+                                    <input type="hidden" asp-for="Warehouses[i].Id" />
+                                    @Html.DisplayFor(m => m.Warehouses[i].Name)
+                                    <span class="validation-message text-danger d-none" style="font-size: 0.85rem;">Please Check The Warehouse Before Giving Input And Price</span>
+
+                                </td>
+                                <td class="text-center">
+                                    <!-- Ensure `Quantity` input uses the correct class -->
+                                    <input type="number" asp-for="Warehouses[i].Quantity" class="form-control warehouse-quantity" value="0" style="max-width: 80px; margin: 0 auto;"  />
+                                  
+                                </td>
+                                <td class="text-center">
+                                    <!-- Ensure `Unit Price` input uses the correct class -->
+                                    <input type="number" asp-for="Warehouses[i].UnitPrice" class="form-control warehouse-unit-price" value="0" style="max-width: 120px; margin: 0 auto;" step="0.01"  />
+                                </td>
+                            </tr>
+                        }
+                    
+                    </tbody>
+                </table>
+              </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="submitWarehouseForm" class="btn btn-success">Save</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+               
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+
+
+    
+
+   
+
+
+}

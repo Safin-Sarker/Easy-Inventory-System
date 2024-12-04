@@ -1,0 +1,42 @@
+﻿@model DevSkill.Inventory.Web.Areas.Admin.Models.StockTransferModels.StockTransferDetailsModel
+
+@{
+    Layout = null;
+}
+
+<div style="text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 20px; border-bottom: 1px solid #000;">
+    Stock Transfer Voucher
+</div>
+
+<div style="display: flex; justify-content: space-between;">
+    <div style="width: 60%;"></div>
+    <div style="width: 40%; background-color: #f2f2f2; padding: 10px; border-radius: 5px;">
+        <p><strong>Voucher Number:</strong> @Model.VoucherNumber</p>
+        <p><strong>Voucher Date:</strong> @Model.VoucherDate.ToString("yyyy-MM-dd")</p>
+        <p><strong>Transfer Date:</strong> @Model.VoucherDate.ToString("yyyy-MM-dd")</p> <!-- Assuming the transfer date is the same as voucher date -->
+        <p><strong>Warehouse:</strong> @Model.SourceWarehouseName</p>
+        <p><strong>Created On:</strong> @Model.VoucherDate.ToString("yyyy-MM-dd") by @Model.CreatedBy</p>
+    </div>
+</div>
+
+<div style="margin-top: 20px;">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color: #f2f2f2; border-bottom: 1px solid #000;">
+                <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Product</th>
+                <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Transfer Qty</th>
+                <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Destination Warehouse</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.TransferItems)
+            {
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 8px; border: 1px solid #ddd;">@item.ProductName</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">@item.Quantity</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">@item.DestinationWarehouseName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

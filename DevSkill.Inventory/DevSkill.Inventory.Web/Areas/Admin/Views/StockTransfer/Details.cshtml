@@ -1,0 +1,132 @@
+﻿@model DevSkill.Inventory.Web.Areas.Admin.Models.StockTransferModels.StockTransferDetailsModel
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.deleteBtn').on('click', function () {
+                var id = $(this).data('id');
+                $('#deleteId').val(id); // Set the hidden input value
+                $('#deleteForm').attr('action', '/Admin/StockTransfer/Delete'); // Set form action
+                $('#modal-default').modal('show'); // Show the modal
+            });
+
+            // Handle the Delete button in the modal
+            $('#deleteButton').on('click', function () {
+                $('#deleteForm').submit(); // Submit the form when 'Yes, Delete!' is clicked
+            });
+        });
+
+
+
+    </script>
+
+
+
+}
+
+
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <!-- Title and Back Icon Row with Flexbox for proper alignment -->
+            <div class="col-md-6">
+                <h2>
+                    <a><i class="fa-solid fa-file-lines"></i></a>
+                    <strong>Stock Issue</strong>
+                </h2>
+            </div>
+
+            <!-- Right-side button alignment -->
+            <div class="col-md-6 d-flex justify-content-end align-items-center">
+                <!-- New Record Button -->
+                <a class="btn btn-success btn-sm me-2" href="/Admin/StockTransfer/Create">
+                    <i class="fas fa-plus me-1"></i> New Record
+                </a>
+
+                <div class="btn-group m-2">
+                    <button type="button" class="btn btn-danger btn-sm deleteBtn" data-id="@Model.Id" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+
+                <!-- Export to PDF Button -->
+                <a class="btn btn-white me-2" href="/Admin/StockTransfer/ExportToPdf?id=@Model.Id" target="_blank" ">
+                    <i class="fa-solid fa-file-pdf"></i><strong> Export to PDF</strong>
+                </a>
+                <script>
+                    console.log("ID from Model:", "@Model.Id");
+                </script>
+
+
+                <!-- Back Button -->
+                <a class="custom-back-icon" data-fa-transform="shrink-3" href="/Admin/StockTransfer/Index">
+                    <i class="fa-solid fa-reply"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<partial name="_ModalPartial" />
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mt-2">
+            <div class="col-md-12">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <h4 class="p-2">Stock Issue Voucher</h4>
+                            </div>
+                            <div class="col-sm-7">
+                                <div class="container border rounded pt-2">
+                                    <p><strong>Voucher Number:</strong> @Model.VoucherNumber</p>
+                                    <p><strong>Voucher Date:</strong> @Model.VoucherDate.ToString("yyyy-MM-dd")</p>
+                                    <p><strong>Warehouse:</strong> @Model.SourceWarehouseName</p>
+                                    <div class="row border-top bg-light">
+                                        <div class="col-sm-12 py-2">
+                                            <i class="fa fa-calendar-alt"></i>
+                                            <span>Created on @Model.VoucherDate.ToString("yyyy-MM-dd") by @Model.CreatedBy</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Products Table -->
+                        <div class="table-responsive mt-4">
+                            <table class="table table-striped border">
+                                <thead>
+                                    <tr class="border-bottom">
+                                        <th class="border-0 fs--1">Products</th>
+                                        <th class="border-0 fs--1">Quantity</th>
+                                        <th class="border-0 fs--1">Destination Warehouse</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var product in Model.TransferItems)
+                                    {
+                                        <tr>
+                                            <td class="align-middle">
+                                                <h6 class="mb-0 text-nowrap">@product.ProductName</h6>
+                                            </td>
+                                            <td class="align-middle">@product.Quantity</td>
+                                            <td class="align-middle">@product.DestinationWarehouseName</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

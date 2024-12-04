@@ -1,0 +1,89 @@
+﻿@model DevSkill.Inventory.Web.Areas.Admin.Models.StockConsumption_Model.StockconsumptionDeailsModel
+
+@{
+    Layout = null; 
+
+}
+
+<style>
+    /* Hide unnecessary elements */
+    .hide-pdf {
+        display: none;
+    }
+
+    /* General styling */
+    .container {
+        width: 100%;
+    }
+
+    .voucher-header h2 {
+        font-size: 24px;
+        text-align: center;
+        border-bottom: 2px solid black;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+    }
+
+    /* Table styling */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .table th, .table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #f2f2f2;
+        }
+
+    .table-bordered {
+        border: 1px solid #000;
+    }
+
+</style>
+
+<div class="voucher-header">
+    <h2 style="text-align:center; border-bottom: 1px solid black; padding-bottom: 10px;">Stock Issue Voucher</h2>
+</div>
+
+<!-- Voucher Information -->
+<div class="container" style="margin-top: 20px;">
+    <div class="row">
+        <div class="col-sm-6">
+            <p><strong>Voucher Number:</strong> @Model.VoucherNumber</p>
+            <p><strong>Voucher Date :</strong> @Model.VoucherDate.ToString("yyyy-MM-dd")</p>
+        </div>
+        <div class="col-sm-6">
+            <p><strong>Godown:</strong> @Model.WarehouseName</p>
+            <p><strong>Created On:</strong> @Model.VoucherDate.ToString("yyyy-MM-dd") by @Model.CreatedBy</p>
+        </div>
+    </div>
+</div>
+
+<!-- Products Table -->
+<div class="table-responsive mt-4">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width:40%">Product</th>
+                <th style="width:30%">Quantity</th>
+                <th style="width:30%">Unit Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model.StockConsumeds)
+            {
+                <tr>
+                    <td>@product.ItemName</td>
+                    <td>@product.Quantity</td>
+                    <td>@product.UnitPrice</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

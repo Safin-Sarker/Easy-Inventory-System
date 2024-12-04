@@ -1,0 +1,134 @@
+﻿@{
+    ViewData["Title"] = "Roles";
+}
+
+@section Styles {
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="~/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+}
+
+@section Scripts {
+    <!-- DataTables & Plugins JS -->
+    <script src="~/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/adminlte/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/adminlte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/adminlte/plugins/jszip/jszip.min.js"></script>
+    <script src="~/adminlte/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/adminlte/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/adminlte/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/adminlte/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <!-- Initialize DataTables -->
+    <script>
+        $(document).ready(function () {
+            $('#roleTable').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: false,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ],
+                ajax: {
+                    url: "/Admin/Role/RoleJsonData",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function (d) {
+                        return JSON.stringify(d);
+                    }
+                },
+                columns: [
+                    {
+                        data: 'name', // Column for the role name
+                        render: function (data) {
+                            return `<span>${data}</span>`;
+                        }
+                    },
+                    {
+                        data: 'id', // Column for the role ID (used for actions)
+                        orderable: false,
+                        render: function (data) {
+                            return `<div class="dropdown">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+                                                    Actions
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="/Admin/Role/Edit/${data}">Edit</a>
+                                                    <a class="dropdown-item deleteBtn" href="#" data-id="${data}">Delete</a>
+                                                </div>
+                                            </div>`;
+                        }
+                    }
+                ]
+            });
+
+            // Handle delete button click
+            $('#roleTable').on('click', '.deleteBtn', function () {
+                var id = $(this).data('id');
+                $('#deleteId').val(id); // Set the hidden input value
+                $('#deleteForm').attr('action', '/Admin/Role/Delete'); // Set form action
+                $('#modal-default').modal('show'); // Show the modal
+            });
+
+            $('#deleteButton').on('click', function () {
+                $('#deleteForm').submit(); // Submit the form when 'Yes, Delete!' is clicked
+            });
+        });
+    </script>
+}
+
+<partial name="_ResponsePartial" />
+<partial name="_ModalPartial" />
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Roles</h3>
+        <div class="card-tools">
+            <a href="/Admin/Role/Create" class="btn btn-success btn-sm">+ New Role</a>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <table id="roleTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="modal-default" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this role?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" method="post">
+                    <input type="hidden" id="deleteId" name="id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" id="deleteButton" class="btn btn-danger">Yes, Delete!</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+version: "3"
+services:
+  web:
+    build: 
+      context: .
+      dockerfile: DevSkill.Inventory.Web/Dockerfile
+    image: inventory_image3
+    env_file: 
+      - web.env
+    ports:
+      - "8001:80"
+    entrypoint: ["dotnet", "DevSkill.Inventory.Web.dll"]

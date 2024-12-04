@@ -1,0 +1,224 @@
+﻿@model DevSkill.Inventory.Web.Areas.Admin.Models.StockProduction.StockProductionCreateModel
+
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title"><i class="fa-solid fa-pen-to-square" style="margin-right: 8px;"></i><b>New Stock Production Voucher</b></h1>
+    </div>
+
+    <partial name="_ResponsePartial" />
+
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-md-4 col-form-label">Voucher Number</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" asp-for="VoucherNumber" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Warehouse selection (selected once for the entire form) -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="WarehouseId" class="col-md-4 col-form-label">Warehouse <span class="text-danger">*</span></label>
+                        <div class="col-md-8">
+                            <select asp-for="WarehouseId" class="form-control" asp-items="Model.Warehouses" id="warehouseSelect">
+                                <option value="">Select Warehouse</option>
+                            </select>
+                            <span asp-validation-for="WarehouseId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="VoucherDate" class="col-md-4 col-form-label">Voucher Date</label>
+                        <div class="col-md-8">
+                            <input type="date" class="form-control" asp-for="VoucherDate" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table for adding products -->
+            <div class="table-responsive mt-4">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product<span class="text-danger">*</span></th>
+                            <th>Quantity<span class="text-danger">*</span></th>
+                            <th>Unit Price</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productRows">
+                        <!-- Dynamically added product rows will appear here -->
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-secondary btn-sm" id="addRow">+ New Row</button>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label for="Details" class="col-md-4 col-form-label" asp-for="Details">Details</label>
+                        <div class="col-md-8">
+                            <textarea class="form-control" rows="3" asp-for="Details"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input asp-for="CreatedBy" type="hidden" />
+
+            <div class="row mt-4">
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-success mx-2">Save</button>
+                    <a href="@Url.Action("Index")" class="btn btn-danger mx-2">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        let rowIdx = 0;  // Initialize the row index
+        let selectedWarehouseId = null;
+
+        // When the warehouse is selected, fetch items for that warehouse
+        $('#warehouseSelect').on('change', function () {
+            selectedWarehouseId = $(this).val();  // Store the selected warehouse ID
+            if (selectedWarehouseId) {
+                // Fetch items for the selected warehouse and update the rows
+                fetchItemsForWarehouse(selectedWarehouseId);
+            } else {
+                // Clear all product dropdowns if no warehouse is selected
+                clearProductDropdowns();
+            }
+        });
+
+        // Add a new row to the product table
+        $('#addRow').on('click', function () {
+            if (!selectedWarehouseId) {
+                alert('Please select a warehouse first.');
+                return;
+            }
+
+            const newRow = `<tr>
+                                                        <td>
+                                                            <select name="StockProducedItems[${rowIdx}].ItemId" class="form-control itemSelect" required>
+                                                                <option value="">Select Product</option>
+                                                            </select>
+                                                            <span class="text-danger item-validation"></span>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" name="StockProducedItems[${rowIdx}].Quantity" class="form-control quantityInput" placeholder="Quantity" required min="1" />
+                                                            <span class="text-danger quantity-validation"></span>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" name="StockProducedItems[${rowIdx}].UnitPrice" class="form-control" placeholder="Unit Price" />
+                                                        </td>
+                                                         <td><button type="button" class="btn btn-danger btn-sm removeRow"> <i class="fa-solid fa-trash"></i></button></td>
+                                                    </tr>`;
+
+            $('#productRows').append(newRow);
+            rowIdx++;  // Increment the row index for future rows
+
+            // If items were already fetched for the selected warehouse, populate the new row's product dropdown
+            if (selectedWarehouseId) {
+                fetchItemsForWarehouse(selectedWarehouseId, rowIdx - 1);  // Pass the latest row index
+            }
+        });
+
+        // Remove a row when the delete button is clicked
+        $(document).on('click', '.removeRow', function () {
+            $(this).closest('tr').remove();
+        });
+
+        // Fetch available items for the selected warehouse using AJAX
+        function fetchItemsForWarehouse(warehouseId, rowIndex = null) {
+            $.ajax({
+                url: '@Url.Action("GetItemsByWarehouse", "StockProduction", new { area = "Admin" })',
+                type: "GET",
+                data: { warehouseId: warehouseId },
+                success: function (items) {
+                    if (rowIndex !== null) {
+                        // Populate the new row's product dropdown
+                        updateItemSelectForRow(items, rowIndex);
+                    } else {
+                        // Populate all product dropdowns for all rows
+                        $('#productRows tr').each(function (index) {
+                            updateItemSelectForRow(items, index);
+                        });
+                    }
+                },
+                error: function () {
+                    console.error('Error fetching items for Warehouse ID:', warehouseId);
+                }
+            });
+        }
+
+        // Update the product select element with available items for a specific row
+        function updateItemSelectForRow(items, rowIndex) {
+            var selectElement = $('select[name="StockProducedItems[' + rowIndex + '].ItemId"]');
+            selectElement.empty();  // Clear existing options
+            selectElement.append('<option value="">Select Product</option>');  // Default option
+            $.each(items, function (index, item) {
+                selectElement.append('<option value="' + item.id + '">' + item.name + '</option>');
+            });
+        }
+
+        // Clear product dropdowns when no warehouse is selected
+        function clearProductDropdowns() {
+            $('#productRows tr').each(function () {
+                $(this).find('select.itemSelect').empty().append('<option value="">Select Product</option>');
+            });
+        }
+
+        // Client-side validation before form submission
+        $('form').on('submit', function (e) {
+            let isValid = true;
+
+            // Validate warehouse selection
+            if (!selectedWarehouseId) {
+                isValid = false;
+                alert('Please select a warehouse.');
+            }
+
+            // Validate each product and quantity row
+            $('#productRows tr').each(function () {
+                const productSelect = $(this).find('select.itemSelect');
+                const quantityInput = $(this).find('input.quantityInput');
+
+                if (productSelect.val() === '') {
+                    isValid = false;
+                    $(this).find('.item-validation').text('Product is required.');
+                } else {
+                    $(this).find('.item-validation').text('');
+                }
+
+                if (quantityInput.val() === '' || quantityInput.val() <= 0) {
+                    isValid = false;
+                    $(this).find('.quantity-validation').text('Quantity must be at least 1.');
+                } else {
+                    $(this).find('.quantity-validation').text('');
+                }
+            });
+
+            if (!isValid) {
+                e.preventDefault();  // Prevent form submission if validation fails
+            }
+        });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

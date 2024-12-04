@@ -1,0 +1,97 @@
+﻿@model DevSkill.Inventory.Web.Areas.Admin.Models.RoleModel.CreateRoleViewModel
+
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">
+            <i class="fa-solid fa-pen-to-square" style="margin-right: 8px;"></i><b>Create New Role</b>
+        </h1>
+    </div>
+
+    <div class="card-body">
+        <form asp-controller="Role" asp-area="Admin" asp-action="Create" method="post">
+            <!-- Role Name Input -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="RoleName">Role Name <span class="text-danger">*</span></label>
+                        <input asp-for="RoleName" class="form-control" required />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Permissions Section -->
+            <div class="permissions-section">
+                <h3><b>Permissions</b></h3>
+
+                <!-- Group permissions by category -->
+                @foreach (var group in Model.Permissions.GroupBy(p => p.Category))
+                {
+                    <div class="card mb-3">
+                        <div class="card-header d-flex align-items-center">
+                            <h5 class="mb-0 section-title"><b>@group.Key Permissions</b></h5>
+                            <input type="checkbox" onclick="toggleSelectAll(this, '@group.Key')" class="select-all-checkbox" />
+                            <span class="select-all-label">Select All</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                @foreach (var permission in group)
+                                {
+                                    int permissionIndex = Model.Permissions.IndexOf(permission);
+
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <!-- Bind IsSelected using asp-for -->
+                                            <input asp-for="Permissions[@permissionIndex].IsSelected" class="form-check-input permission-checkbox" data-group="@group.Key" />
+                                            <input type="hidden" asp-for="Permissions[@permissionIndex].Name" />
+                                            <input type="hidden" asp-for="Permissions[@permissionIndex].DisplayName" />
+                                            <input type="hidden" asp-for="Permissions[@permissionIndex].Category" />
+
+                                            <label class="form-check-label">@permission.DisplayName</label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Save and Cancel Buttons -->
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success mx-2">Save</button>
+                <a href="@Url.Action("Index")" class="btn btn-danger mx-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleSelectAll(source, group) {
+            const checkboxes = document.querySelectorAll(`.permission-checkbox[data-group="${group}"]`);
+            checkboxes.forEach(checkbox => checkbox.checked = source.checked);
+        }
+    </script>
+}
+
+<style>
+    .permissions-section {
+        margin-top: 20px;
+    }
+
+    .section-title {
+        margin-right: 20px;
+    }
+
+    .select-all-checkbox {
+        margin-right: 8px;
+    }
+
+    .form-check {
+        margin-left: 15px;
+    }
+
+    .card-header h5 {
+        display: inline;
+    }
+</style>

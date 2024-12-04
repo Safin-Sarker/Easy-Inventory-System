@@ -1,0 +1,109 @@
+﻿@model WarehouseUpdateModel
+@{
+    ViewData["Title"] = "Update";
+}
+
+@section Styles
+{
+
+
+    <link rel="stylesheet" href="~/adminlte/css/adminlte.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <!-- Title and Back Icon Row with Flexbox for proper alignment -->
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <!-- Title on the left -->
+                <h1 class="text-start">
+                    <i class="fas fa-edit fa-w-18 me-1" data-fa-transform="shrink-3"></i> <b>Edit Warehouse </b>
+                </h1>
+
+                <!-- Back Icon on the right -->
+                <a href="#" class="custom-back-icon" data-fa-transform="shrink-3">
+                    <i class="fa-solid fa-reply"></i>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Form column -->
+            <div class="col-12 mx-auto">
+                <!-- Form card -->
+                <div class="card shadow-sm p-4">
+                    <div class="card-body">
+                        <!-- Form start -->
+                        <form asp-antiforgery="true" asp-area="Admin" asp-controller="Warehouse" asp-action="Update" method="post">
+                            <partial name="_ResponsePartial" />
+
+                            <div class="row mb-3">
+                                <!-- All form elements under one col-sm-6 -->
+                                <div class="col-sm-6 ">
+                                        <input type="hidden" asp-for="Id" />
+                                        <div class="mb-3">
+                                            <label for="warehouseName" class="form-label">Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="warehouseName" asp-for="Name" placeholder="Enter warehouse name" required>
+                                            <span asp-validation-for="Name" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="warehouseManager" class="form-label">Manager</label>
+                                            <input type="text" class="form-control" id="warehouseManager" asp-for="Manager" placeholder="Enter Manager">
+                                            <span asp-validation-for="Manager" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="warehouseLocation" class="form-label">Location</label>
+                                            <input type="text" class="form-control" id="warehouseLocation" asp-for="Location" placeholder="Enter location">
+                                            <span asp-validation-for="Location" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="warehouseContact" class="form-label">Contact Number</label>
+                                            <input type="number" class="form-control" id="warehouseContact" asp-for="ContactNumber" placeholder="Enter contact number">
+                                            <span asp-validation-for="ContactNumber" class="text-danger"></span>
+                                        </div>
+                                    
+                                </div>
+
+                                <hr class="my-3">
+                                <!-- Submit button -->
+                                <div class="row">
+                                    <div class="col-sm-10 offset-sm-2 d-flex justify-content-start">
+                                        <!-- Save Button -->
+                                        <button type="submit" class="btn btn-success btn-lg" name=""  style="margin-right: 20px;">
+                                            <i class="far fa-check-square me-1"></i> Update
+                                        </button>
+
+                                        <a class="btn btn-outline-danger btn-lg"  asp-area="Admin" asp-controller="Warehouse" asp-action="Index">Cancel</a>
+                                    </div>
+                                </div>
+
+                       </form>
+
+                    </div>
+                </div>
+                <!-- /.Form card -->
+            </div>
+            <!--/.col -->
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+
+
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
+
+

@@ -1,0 +1,218 @@
+﻿@model ItemListModel
+
+@{
+    ViewData["Title"] = "IndexSp";
+}
+
+@section Styles
+{
+    <link rel="stylesheet" href="~/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+}
+
+@section Scripts
+{
+    <script src="~/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/adminlte/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/adminlte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/adminlte/plugins/jszip/jszip.min.js"></script>
+    <script src="~/adminlte/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/adminlte/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/adminlte/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/adminlte/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <script>
+        $(function () {
+            $("#items").DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                lengthChange: true,
+                autoWidth: false,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ],
+                ajax: {
+                    url: "/Admin/Item/ItemJsonData",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: function (d) {
+                        d.SearchItem = {
+                            Name: $("#SearchItem_Name").val() || '',
+                            ProductCode: $("#SearchItem_ProductCode").val() || '',
+                            ItemType: $("#SearchItem_ItemType").val() || '',
+                            Category: $("#SearchItem_Category").val() || ''
+                        };
+                        return JSON.stringify(d);
+                    },
+                },
+                columnDefs: [
+
+                    {
+                        targets: 0,  // Voucher Number column
+                        render: function (data, type, row) {
+                            return `<a href="/Admin/Item/Details/${row[7]}">${data}</a>`;  // Adjusted URL for StockTransfer details
+                        }
+                    },
+                    {
+                        targets: 6, // Image column
+                        render: function (data, type, row) {
+                            return data ? `<img src="${data}" class="img-thumbnail" style="width: 50px; height: auto;">` : "null";
+                        }
+                    }
+                
+                ],
+                dom: '<"row"<"col-sm-12 col-md-6"lB><"col-sm-12 col-md-6"f>><"row"<"col-sm-12"tr>><"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+                buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#items_wrapper .col-md-6:eq(0)');
+
+            
+
+            $("#searchButton").click(function () {
+                $('#items').DataTable().ajax.reload(null, false);
+            });
+
+            $(".btn-outline-secondary").click(function () {
+                // Clear all the search input fields
+                $("#SearchItem_Name").val('');
+                $("#SearchItem_ProductCode").val('');
+                $("#SearchItem_ItemType").val('');
+                $("#SearchItem_Category").val('');
+
+                // Reload the DataTable without filters
+                $('#items').DataTable().ajax.reload(null, false);
+            });
+
+        });
+    </script>
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+               
+                <h2>
+                    <a><i class="fa-solid fa-file-lines"></i></a>
+                    Products/Service
+                </h2>
+            </div>
+            <div class="col-sm-6 text-right">
+                <a href="/Admin/Item/Create" class="btn btn-success btn-sm">+ New Record</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="col-12">
+        <div class="card card-outline card-primary collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-search mr-1"></i>Search Item</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="SearchItem_Name" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label>Product Code</label>
+                            <input type="text" id="SearchItem_ProductCode" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label>Item Type</label>
+                            <select id="SearchItem_ItemType" class="form-control">
+                                <option value="">All</option>
+                                @foreach (var itemType in Model.ItemType)
+                                {
+                                    <option value="@itemType">@itemType</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="SearchItem_Category" class="form-control">
+                                <option value="">All</option>
+                                @foreach (var category in Model.Category)
+                                {
+                                    <option value="@category">@category</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <button id="searchButton" type="submit" class="btn btn-outline-primary float-right m-2 ">
+                     <i class="fas fa-search fa-w-16"></i>
+                    Search
+                </button>
+
+                <a class="btn btn-outline-secondary float-right m-2">Clear Search</a>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">All available items</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <partial name="_ResponsePartial" />
+                        <partial name="_ModalPartial" />
+                        <table id="items" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Product Code</th>
+                                    <th>Item Type</th>
+                                    <th>Quantity</th>
+                                    <th>Unit of Measure</th>
+                                    <th>Category</th>
+                                    <th>Image</th>
+
+                                </tr>
+                            </thead>
+                            <tfoot>
+                               
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</section>
+
+

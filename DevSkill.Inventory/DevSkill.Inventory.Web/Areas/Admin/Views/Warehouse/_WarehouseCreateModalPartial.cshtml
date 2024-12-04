@@ -1,0 +1,56 @@
+﻿@model WarehouseCreateModel
+@{
+    ViewData["Title"] = "_WarehouseCreateModalPartial";
+}
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="warehouseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="warehouseModalLabel"><i class="bi bi-house"></i> New Warehouse</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="warehouseForm" asp-antiforgery="true" asp-area="Admin" asp-controller="Warehouse" asp-action="CreateWarehouse"  method="post">
+                    <div class="mb-3">
+                        <label for="warehouseName" class="form-label">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="warehouseName" asp-for="Name" placeholder="Enter warehouse name" required>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="warehouseManager" class="form-label">Manager</label>
+                        <input type="text" class="form-control" id="warehouseManager" asp-for="Manager" placeholder="Enter Manager">
+                        <span asp-validation-for="Manager" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="warehouseLocation" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="warehouseLocation" asp-for="Location" placeholder="Enter location">
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="warehouseContact" class="form-label">Contact Number</label>
+                        <input type="number" class="form-control" id="warehouseContact" asp-for="ContactNumber" placeholder="Enter contact number">
+                        <span asp-validation-for="ContactNumber" class="text-danger"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="saveWarehouse">Save</button>
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts
+{
+
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

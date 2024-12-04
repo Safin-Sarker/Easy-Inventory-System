@@ -1,0 +1,116 @@
+﻿@model ItemDetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<!-- Content Header -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <!-- Title and Back Icon Row with Flexbox for proper alignment -->
+            <div class="col-md-6">
+                <h2>
+                    <a><i class="fa-solid fa-file-lines"></i></a>
+                    <strong>View Item</strong>
+                </h2>
+            </div>
+
+            <!-- Right-side button alignment -->
+            <div class="col-md-6 d-flex justify-content-end align-items-center">
+                <!-- New Record Button -->
+                <a class="btn btn-success btn-sm m-2" href="/Admin/Item/Create">
+                    <i class="fas fa-plus me-1"></i> New Record
+                </a>
+
+                <a class="btn btn-info btn-sm m-2" href="/Admin/Item/Update/@Model.Id">Edit</a>
+
+                <div id="items">
+                    <!-- Example Delete Button -->
+                    <button type="button" class="btn btn-danger btn-sm show-bs-modal" data-id="@Model.Id">
+                        <i class="fa-solid fa-trash"></i> Delete
+                    </button>
+                </div>
+
+                <!-- Back Button -->
+                <a class="custom-back-icon m-2" data-fa-transform="shrink-3" href="/Admin/Item/Index">
+                    <i class="fa-solid fa-reply"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<partial name="_ModalPartial" />
+<!-- Main Content -->
+<div class="container-fluid bg-white p-4 rounded shadow-sm" style="max-width: 1200px; margin: 0 auto;">
+    <div class="row">
+        <!-- Item Details Card -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    @Model.Name
+                </div>
+                <div class="card-body">
+                    <p><strong>Product Code:</strong> @Model.ProductCode</p>
+                    <p><strong>Product Category:</strong> @Model.ProductCategory</p>
+                    <p><strong>Description:</strong> @Html.Raw(Model.Description)</p>
+                    <p><strong>Inventory Tracking:</strong> @(Model.InventoryTracking ? "Active" : "Inactive")</p>
+                    <p><strong>Unit of Measure:</strong> @Model.UnitOfMeasure</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Information Card (Displayed Only If InventoryTracking Is Active) -->
+        @if (Model.InventoryTracking)
+        {
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>Inventory Information</strong>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Warehouse</th>
+                                    <th>Available Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var warehouse in Model.Warehouses)
+                                {
+                                    <tr>
+                                        <td>@warehouse.Name</td>
+                                        <td>@warehouse.Quantity</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        
+        $('#items').on('click', '.show-bs-modal', function (event) {
+            let id = $(this).data("id"); 
+            let modal = $("#modal-default");
+            modal.find('.modal-body p').text('Are you sure you want to delete this record?'); // Update modal message
+            $("#deleteId").val(id); // Set the item ID in the hidden input field
+            $("#deleteForm").attr("action", "/admin/item/delete"); // Set the form action URL
+            modal.modal('show'); // Show the modal
+        });
+
+        // When the "Yes, Delete!" button is clicked, submit the form
+        $("#deleteButton").click(function () {
+            $("#deleteForm").submit();
+        });
+
+    </script>
+}

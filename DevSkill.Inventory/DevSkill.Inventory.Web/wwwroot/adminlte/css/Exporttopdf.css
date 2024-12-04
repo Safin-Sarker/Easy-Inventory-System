@@ -1,0 +1,40 @@
+﻿
+/* Hide unnecessary elements */
+.hide-pdf {
+    display: none;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .table th, .table td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table th {
+        background-color: #f2f2f2;
+    }
+
+.align-middle {
+    vertical-align: middle;
+}
+
+.border {
+    border: 1px solid #ccc;
+}
+
+.border-top {
+    border-top: 1px solid #ccc;
+}
+
+.fs--1 {
+    font-size: 0.875rem;
+}
+
+.voucher-header {
+    margin-bottom: 20px;
+}
