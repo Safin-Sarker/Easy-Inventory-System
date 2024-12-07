@@ -1,6 +1,7 @@
 ﻿using DevSkill.Inventory.Infrastructure;
 using DevSkill.Inventory.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -94,6 +95,9 @@ namespace DevSkill.Inventory.Infrastructure.Extensions
                 options.AddPolicy("CanUpdateRole", policy => policy.RequireClaim("Permission", "RoleUpdate"));
                 options.AddPolicy("CanDeleteRole", policy => policy.RequireClaim("Permission", "RoleDelete"));
             });
+
+
+
 
 
 

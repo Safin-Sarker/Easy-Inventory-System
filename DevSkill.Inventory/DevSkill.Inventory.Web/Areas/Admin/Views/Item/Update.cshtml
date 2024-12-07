@@ -33,7 +33,7 @@
                 <div class="card shadow-sm p-4">
                     <div class="card-body">
                         <!-- Form start -->
-                        <form asp-antiforgery="true" asp-area="Admin" asp-controller="Item" asp-action="Update" method="post">
+                        <form asp-antiforgery="true" asp-area="Admin" asp-controller="Item" asp-action="Update" method="post" enctype="multipart/form-data">
 
                             <!-- Hidden field for Item ID -->
                             <input type="hidden" asp-for="Id" />

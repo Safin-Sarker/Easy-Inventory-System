@@ -12,6 +12,7 @@ using DevSkill.Inventory.Infrastructure.Identity;
 using DevSkill.Inventory.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using DevSkill.Inventory.Domain;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace DevSkill.Inventory.Web.Controllers
 {
@@ -105,22 +106,27 @@ namespace DevSkill.Inventory.Web.Controllers
             return View(model); // Capitalize 'View'
         }
 
-
-
         [AllowAnonymous]
-        public async Task<IActionResult> LoginAsync(string returnUrl = null)
+        public IActionResult Login(string returnUrl = null)
         {
             var model = new SigninModel();
-            model.ReturnUrl = returnUrl == null ? Url.Action("Index", "Dashboard", new { Area = "Admin" }) : returnUrl;
 
-            // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            // Check if "Remember Me" cookie exists
+            if (Request.Cookies.TryGetValue("RememberMeFunc", out string rememberMeToken))
+            {
+                // Decode the token (e.g., email stored in the cookie)
+                var tokenParts = rememberMeToken.Split('|');
+                if (tokenParts.Length == 2)
+                {
+                  ViewBag.RememberMeEmail = tokenParts[0];
+                  ViewBag.RememberMePassword = tokenParts[1];
+                }
+            }
 
-            model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
+            ViewData["ReturnUrl"] = returnUrl;
             return View(model);
-
         }
+
 
         [HttpPost, ValidateAntiForgeryToken, AllowAnonymous]
         public async Task<IActionResult> LoginAsync(SigninModel model)
@@ -132,7 +138,6 @@ namespace DevSkill.Inventory.Web.Controllers
             {
                 try
                 {
-                    // Check if the user exists
                     var user = await _userManager.FindByEmailAsync(model.Email);
                     if (user == null)
                     {
@@ -150,38 +155,46 @@ namespace DevSkill.Inventory.Web.Controllers
 
                     if (result.Succeeded)
                     {
+                        // Remember Me functionality
+                        if (model.RememberMe)
+                        {
+                            var cookieOptions = new CookieOptions
+                            {
+                                HttpOnly = true,
+                                Secure = true,
+                                SameSite = SameSiteMode.Strict,
+                                Expires = DateTime.Now.AddDays(14)
+                            };
+
+                            Response.Cookies.Append("RememberMeFunc", $"{user.Email}|{model.Password}", cookieOptions);
+                        }
+
+                        _logger.LogInformation("User logged in successfully.");
                         return LocalRedirect(model.ReturnUrl);
                     }
+
                     if (result.RequiresTwoFactor)
                     {
-                        return RedirectToAction("LoginWith2fa", new { ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+                        return RedirectToAction("LoginWith2fa", new { ReturnUrl = model.ReturnUrl, model.RememberMe });
                     }
+
                     if (result.IsLockedOut)
                     {
                         _logger.LogWarning("User account locked out.");
                         return RedirectToAction("Lockout");
                     }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                        return View(model);
-                    }
+
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 }
                 catch (Exception ex)
                 {
-                    // Log the error
                     _logger.LogError(ex, "An error occurred during the login attempt.");
-
-                    // Display a user-friendly error message
                     ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
-                    return View(model);
                 }
             }
 
-            // If we got this far, something failed, redisplay the form
             return View(model);
         }
-
         public async Task<IActionResult> LogoutAsync(string returnUrl = null)
         {
 

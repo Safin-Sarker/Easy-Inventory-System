@@ -32,7 +32,7 @@ namespace DevSkill.Inventory.Application.Services.ImageManagement_Service
             var uploadParams = new ImageUploadParams
             {
                 File = new FileDescription(file.FileName, file.OpenReadStream()),
-                PublicId = Guid.NewGuid().ToString() // Generate unique ID for the file
+                PublicId = Guid.NewGuid().ToString() 
             };
 
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
