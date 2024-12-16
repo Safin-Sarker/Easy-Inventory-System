@@ -4,16 +4,19 @@ using DevSkill.Inventory.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DevSkill.Inventory.Web.Data.Migrations
+namespace DevSkill.Inventory.Web.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241207180447_AddProfileFieldsToUser")]
+    partial class AddProfileFieldsToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -415,15 +418,15 @@ namespace DevSkill.Inventory.Web.Data.Migrations
                         {
                             Id = new Guid("dd5b6529-e2f1-4e98-ad4d-bd33432de0e0"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2f0722bf-0b0b-41e2-8405-d31e9c47a758",
+                            ConcurrencyStamp = "09fa8314-ffc2-45e0-957c-6498234a11cb",
                             Email = "superadmin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@EXAMPLE.COM",
                             NormalizedUserName = "SUPERADMIN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGHZ+dc4+SlD4cHRTbmXVkVu4b878e5meUZaCB2K40zo9YsLnjaB0s31OAiLYyhR7A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMu50ddMarcNl3RHgGEMPpm9fWLCZchR9ySyfj4RaGEv5QOzIIrCSQdABwm5LOGE1A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0265dbd5-cac5-4123-94ec-d7ebfbcb105c",
+                            SecurityStamp = "d453d24c-ea13-4ee8-bd65-3a0c37d29418",
                             Status = "Active",
                             TwoFactorEnabled = false,
                             UserName = "superadmin@example.com"
