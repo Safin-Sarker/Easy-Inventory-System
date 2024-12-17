@@ -140,7 +140,20 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="~/adminlte/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            var user = await UserManager.GetUserAsync(User); // Fetch the user
+                            var profileImage = string.IsNullOrEmpty(user?.ProfilePictureUrl)
+                            ? "/adminlte/img/user2-160x160.jpg" // Default image
+                            : user.ProfilePictureUrl; // User's profile image
+
+                            <img src="@profileImage" class="img-circle elevation-2" alt="User Image">
+                        }
+                        else
+                        {
+                            <!-- Show default image for guests -->
+                            <img src="~/adminlte/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        }
                     </div>
                     <div class="info">
                         @if (User.Identity.IsAuthenticated)
