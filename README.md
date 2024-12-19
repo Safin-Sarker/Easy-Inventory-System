@@ -14,7 +14,6 @@
 - [Running Tests](#running-tests)
 - [Folder Structure](#folder-structure)
 - [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 ---
@@ -81,38 +80,44 @@ Ensure you have the following tools installed:
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/EasyInventorySystem.git
-   cd EasyInventorySystem
-
- 2.Restore Dependencies:
-    Run the following command to restore the required dependencies:    
+   
+2.  Go to DevSkill.Inventory.Web folder
     ```bash
+    cd DevSkill.Inventory.Web
+   
+3. Restore Dependencies:
+    Run the following command to restore the required dependencies:
+     ```bash
     dotnet restore
-
-### Set up the database
-  1.Update the appsettings.json file with your database connection string.
-  2.Apply migrations and seed data by running the following command:
-    ```bash
-    dotnet ef database update
+4. Set up the database:
+   - Update the appsettings.json file with your database connection string.
+   - Apply migrations and seed data by running the following command
+      ```bash
+     dotnet ef database update
     
+5. Run the Application Locally
+   Use the following command to start the application:
+    ```bash
+    dotnet run --urls http://localhost:5158
+
+6. Run the Application in Docker 
+   To run the application using Docker, execute the following command:
+    ```bash
+    docker-compose up --build
+
+### Usage
+- Access the application at http://localhost:5158
+- SuperAdmin user can manage:
+ - users, 
+ - roles,
+ - inventory from the admin dashboard.
+
 ### Run the Application Locally
-  Use the following command to start the application:
-   ```dotnet run```
-Run the Application in Docker
-To run the application using Docker, execute the following command:
 
-bash
-Copy code
-docker-compose up --build
-Usage
-Access the application at https://localhost:5001 or http://localhost:5000.
-Use the Swagger UI at /swagger for testing API endpoints.
-Admin users can manage users, roles, and inventory from the admin dashboard.
-Running Tests
-Run unit tests to verify the functionality of the application:
+- Use the following command to start the application:
+  ```bash
+    dotnet test
 
-bash
-Copy code
-dotnet test
 ### Folder Structure
 
 Below is the folder structure of the project:
@@ -126,35 +131,31 @@ Below is the folder structure of the project:
 │   ├── Devskill.Inventory.Web                # Web AFrontend project
 │   ├── Devskill.Inventory.Application.Tests   # Unit  tests
 |   ├── docker-compose.yml                     # Docker configuration
-├── README.md                                 # Project documentation                  
-├── LICENSE                                   # License file
+├── README.md                                 # Project documentation
 └── .gitignore                                # Git ignore rules
 
 ```
-Contributing
-Contributions are welcome! Follow these steps to contribute:
+### Contributing
+- Contributions are welcome! Follow these steps to contribute:
 
-Fork the project.
-Create a new branch:
-bash
-Copy code
-git checkout -b feature/YourFeature
-Commit your changes:
-bash
-Copy code
-git commit -m 'Add some feature'
-Push to the branch:
-bash
-Copy code
-git push origin feature/YourFeature
-Open a pull request.
-License
-This project is licensed under the MIT License. See the LICENSE file for more details.
+1. Fork the project.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature/YourFeature
+3. Commit your changes:
+   ```bash
+   git commit -m 'Add some feature'
+   
+4. Push to the branch:
+   ```bash
+   git push origin feature/YourFeature
+   
+5. Create a pull request.
+
 
 ### Contact
 For questions or feedback, reach out to:
 
 Author: Md Safin Sarker
-Email: your-email@example.com
-GitHub: MdSafinSarker
+Email: safinsarker1122@gmail.com
 
