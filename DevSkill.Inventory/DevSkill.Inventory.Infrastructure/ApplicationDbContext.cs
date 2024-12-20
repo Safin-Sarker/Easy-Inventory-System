@@ -56,6 +56,7 @@ namespace DevSkill.Inventory.Infrastructure
             // Define GUIDs for consistent seeding
             var superAdminRoleId = Guid.Parse("b136d304-ed89-4084-8a3d-521ecda7bb7e");
             var superAdminUserId = Guid.Parse("dd5b6529-e2f1-4e98-ad4d-bd33432de0e0");
+            var memberRoleId = Guid.Parse("a2d7c304-ad89-4084-8a3d-421ecda7bb7f");
 
             // Seed SuperAdmin Role
             var superAdminRole = new ApplicationRole
@@ -63,6 +64,13 @@ namespace DevSkill.Inventory.Infrastructure
                 Id = superAdminRoleId,
                 Name = "SuperAdmin",
                 NormalizedName = "SUPERADMIN"
+            };
+
+            var memberRole = new ApplicationRole
+            {
+                Id = memberRoleId,
+                Name = "Member",
+                NormalizedName = "MEMBER"
             };
 
             // Seed SuperAdmin User
@@ -127,6 +135,17 @@ namespace DevSkill.Inventory.Infrastructure
                 new ApplicationRoleClaim { Id = -31, RoleId = superAdminRoleId, ClaimType = "Permission", ClaimValue = "RoleUpdate" },
                 new ApplicationRoleClaim { Id = -32, RoleId = superAdminRoleId, ClaimType = "Permission", ClaimValue = "RoleDelete" }
             };
+
+            // Seed MEMBER Claims
+            var memberClaims = new List<ApplicationRoleClaim>
+            {
+                new ApplicationRoleClaim { Id = -101, RoleId = memberRoleId, ClaimType = "Permission", ClaimValue = "ItemViewDetails" },
+                new ApplicationRoleClaim { Id = -102, RoleId = memberRoleId, ClaimType = "Permission", ClaimValue = "ConsumptionView" },
+                new ApplicationRoleClaim { Id = -103, RoleId = memberRoleId, ClaimType = "Permission", ClaimValue = "ProductionGet" },
+                new ApplicationRoleClaim { Id = -104, RoleId = memberRoleId, ClaimType = "Permission", ClaimValue = "TransferView" },
+                new ApplicationRoleClaim { Id = -105, RoleId = memberRoleId, ClaimType = "Permission", ClaimValue = "WarehouseView" },
+            };
+
             // Seed User to Role
             var userRole = new ApplicationUserRole
             {
@@ -135,10 +154,11 @@ namespace DevSkill.Inventory.Infrastructure
             };
 
             // Add data to model builder
-            builder.Entity<ApplicationRole>().HasData(superAdminRole);
+            builder.Entity<ApplicationRole>().HasData(superAdminRole, memberRole);
             builder.Entity<ApplicationUser>().HasData(superAdminUser);
             builder.Entity<ApplicationUserRole>().HasData(userRole);
             builder.Entity<ApplicationRoleClaim>().HasData(roleClaims.ToArray());
+            builder.Entity<ApplicationRoleClaim>().HasData(memberClaims.ToArray());
 
         }
 
