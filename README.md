@@ -31,8 +31,8 @@
 1. **Authentication & Authorization**
    - Role-based and Claim-based authorization.
    - Cookie-based authentication.
-   - Login and Registration forms secured with reCAPTCHA.
-
+   - Login and Registration forms
+     
 2. **User Management**
    - SuperAdmin can manage users and roles through CRUD operations.
    - Member users have restricted access until authorized by the SuperAdmin.
@@ -81,24 +81,28 @@ Ensure you have the following tools installed:
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/EasyInventorySystem.git
-   cd EasyInventorySystem
 
- 2.Restore Dependencies:
-    Run the following command to restore the required dependencies:    
-    ```bash
-    dotnet restore
+2. Navigate to the `DevSkill.Inventory.Web` directory:
+   ```bash
+   cd DevSkill.Inventory.Web
+      
+3. Restore Dependencies:
+   Run the following command to restore the required dependencies:
+   ```bash
+   dotnet restore
+ 
+4. Set up the database
+    - Update the appsettings.json file with your database connection string.
+    - The database schema will be updated automatically at runtime due to auto-migration, so no manual commands are needed for applying migrations.
+---
 
-### Set up the database
-  1.Update the appsettings.json file with your database connection string.
-  2.Apply migrations and seed data by running the following command:
-    ```bash
-    dotnet ef database update
+### Usage
     
-### Run the Application Locally
-  Use the following command to start the application:
-   ```dotnet run```
-Run the Application in Docker
-To run the application using Docker, execute the following command:
+1. Run the Application Locally
+    Use the following command to start the application:
+    ```bash
+    dotnet run --urls "http://localhost:5000"
+
 
 bash
 Copy code
