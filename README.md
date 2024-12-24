@@ -98,10 +98,65 @@ Ensure you have the following tools installed:
 
 ### Usage
     
-1. Run the Application Locally
-    Use the following command to start the application:
-    ```bash
-    dotnet run --urls "http://localhost:5000"
+1. **Run the Application Locally**  
+   Use the following command to start the application:  
+   ```bash
+   dotnet run --urls "http://localhost:5000"
+2. **Run the Application with Docker**
+   - You can also containerize and run the application using Docker.
+   #### Option 1: Build Image and Run Container
+     Prepare the application:
+    - Uncomment the line in your code:
+      ```csharp
+      builder.WebHost.UseUrls("http://*:80");
+    - Set the connection string in appsettings.json to
+      ```csharp
+      "ConnectionStrings": {
+        "DefaultConnection": ""
+      }
+    - Navigate to the project directory
+      ```csharp
+      cd DevSkill.Inventory
+    - Build and start the containers
+      ```csharp
+      docker-compose up -d
+    #### Option 2:  Use Prebuilt Images
+     - Pull the prebuilt images from Docker Hub:
+       ```bash
+       docker pull safinsarker/easy-inventory-system-image:Web
+       docker pull safinsarker/easy-inventory-system-image:Database
+     - Use the following docker-compose.yml file for prebuild image:
+       ```bash
+       version: '3.8'
+
+       services:
+         db:
+           image: safinsarker/easy-inventory-system-image:Database  
+           ports:
+             - "1432:1433"
+           environment:
+             ACCEPT_EULA: "Y"
+             MSSQL_SA_PASSWORD: MyPass$123
+             MSSQL_DATABASE: master
+      
+         web:
+           image: safinsarker/easy-inventory-system-image:Web
+           ports:
+             - "8001:80"
+           environment:
+             - ConnectionStrings__DefaultConnection=Server=db;Database=master;User Id=sa;Password=MyPass$123;TrustServerCertificate=True;
+           depends_on:
+             - db
+      - Start the containers
+        ```bash
+        docker-compose up -d
+
+3. **Access the Application**
+   - Locally: http://localhost:5000
+   - Dockerized: http://localhost:8001
+
+        
+
 
 
 bash
