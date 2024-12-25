@@ -104,10 +104,10 @@ Ensure you have the following tools installed:
    - You can also containerize and run the application using Docker.
    #### Option 1: Build Image and Run Container
      Prepare the application:
-    - Uncomment the line in your code:
+    - Uncomment the line from program.cs:
       ```csharp
       builder.WebHost.UseUrls("http://*:80");
-    - Set the connection string in appsettings.json to
+    - Set the connection string empty in appsettings.json
       ```csharp
       "ConnectionStrings": {
         "DefaultConnection": ""
