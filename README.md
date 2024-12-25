@@ -14,7 +14,6 @@
 - [Running Tests](#running-tests)
 - [Folder Structure](#folder-structure)
 - [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 ---
@@ -154,24 +153,27 @@ Ensure you have the following tools installed:
 3. **Access the Application**
    - Locally: http://localhost:5000
    - Dockerized: http://localhost:8001
+   - Admin users can manage users, roles, and inventory from the admin dashboard.
 
-        
+     
+### Running Tests
+To run the tests for this project, follow these steps:
+1. **Navigate to the DevSkill.Inventory.Application.Tests directory**:
+   ```bash
+   cd DevSkill.Inventory.Application.Tests
+2. **Ensure you have the required dependencies**:
+   Before running the tests, make sure all required dependencies are installed by running:
+   ```bash
+   dotnet restore
+3. **Run the tests:** To run the tests for this project, use the following command:
+    ```bash
+   dotnet test
+4. **View the results:** The test results will be displayed in the terminal. If you prefer a more detailed output, you can add the --logger option:
+   ```bash
+   dotnet test --logger "console;verbosity=detailed"
 
+   
 
-
-bash
-Copy code
-docker-compose up --build
-Usage
-Access the application at https://localhost:5001 or http://localhost:5000.
-Use the Swagger UI at /swagger for testing API endpoints.
-Admin users can manage users, roles, and inventory from the admin dashboard.
-Running Tests
-Run unit tests to verify the functionality of the application:
-
-bash
-Copy code
-dotnet test
 ### Folder Structure
 
 Below is the folder structure of the project:
@@ -190,30 +192,26 @@ Below is the folder structure of the project:
 └── .gitignore                                # Git ignore rules
 
 ```
-Contributing
+### Contributing
 Contributions are welcome! Follow these steps to contribute:
 
-Fork the project.
-Create a new branch:
-bash
-Copy code
-git checkout -b feature/YourFeature
-Commit your changes:
-bash
-Copy code
-git commit -m 'Add some feature'
-Push to the branch:
-bash
-Copy code
-git push origin feature/YourFeature
-Open a pull request.
-License
-This project is licensed under the MIT License. See the LICENSE file for more details.
+1. **Fork the project**.
+   Create a new branch:
+   ```bash
+   git checkout -b feature/YourFeature
+2. **Commit your changes**:
+   ```bash
+   git commit -m 'Add some feature'
+3. **Push to the branch**:
+   ```bash
+   git push origin feature/YourFeature
+   
+4. **Open a pull request**.
 
 ### Contact
 For questions or feedback, reach out to:
 
-Author: Md Safin Sarker
-Email: your-email@example.com
-GitHub: MdSafinSarker
+- Author: Md Safin Sarker
+- Email:safinsarker1122@gmail.com
+- Linkedin: www.linkedin.com/in/safin-sarker
 
