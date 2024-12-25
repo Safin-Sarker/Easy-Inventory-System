@@ -14,6 +14,7 @@
 - [Running Tests](#running-tests)
 - [Folder Structure](#folder-structure)
 - [Contributing](#contributing)
+- [Future Work](#future-work)
 - [Contact](#contact)
 
 ---
@@ -41,9 +42,6 @@
    - Advanced search functionality for finding inventory and products efficiently.
    - User profile update capabilities.
 
-4. **Scalability**
-   - Background tasks handled by worker services.
-   - AWS S3 and AWS Queue integration for sustainable workflows.
 
 ---
 
@@ -75,7 +73,7 @@ Ensure you have the following tools installed:
 
 ---
 
-### Installation
+## Installation
 
 1. Clone the repository:
    ```bash
@@ -95,7 +93,7 @@ Ensure you have the following tools installed:
     - The database schema will be updated automatically at runtime due to auto-migration, so no manual commands are needed for applying migrations.
 ---
 
-### Usage
+## Usage
     
 1. **Run the Application Locally**  
    Use the following command to start the application:  
@@ -151,12 +149,16 @@ Ensure you have the following tools installed:
         docker-compose up -d
 
 3. **Access the Application**
-   - Locally: http://localhost:5000
-   - Dockerized: http://localhost:8001
-   - Admin users can manage users, roles, and inventory from the admin dashboard.
-
+   - **Locally**: http://localhost:5000
+   - **Dockerized**: http://localhost:8001
+   - **SuperAdmin user** can manage users, roles, and inventory from the admin dashboard.
+   - **SuperAdmin** (Seeded Credentials):
+     - **Email**: superadmin@example.com
+     - **Password**: SuperAdmin@123
      
-### Running Tests
+---
+
+## Running Tests
 To run the tests for this project, follow these steps:
 1. **Navigate to the DevSkill.Inventory.Application.Tests directory**:
    ```bash
@@ -171,10 +173,9 @@ To run the tests for this project, follow these steps:
 4. **View the results:** The test results will be displayed in the terminal. If you prefer a more detailed output, you can add the --logger option:
    ```bash
    dotnet test --logger "console;verbosity=detailed"
+---
 
-   
-
-### Folder Structure
+## Folder Structure
 
 Below is the folder structure of the project:
 
@@ -192,7 +193,8 @@ Below is the folder structure of the project:
 └── .gitignore                                # Git ignore rules
 
 ```
-### Contributing
+---
+## Contributing
 Contributions are welcome! Follow these steps to contribute:
 
 1. **Fork the project**.
@@ -208,7 +210,18 @@ Contributions are welcome! Follow these steps to contribute:
    
 4. **Open a pull request**.
 
-### Contact
+---
+## Future Work
+
+1. **Adding reCAPTCHA for Public Forms**: 
+   - Implement reCAPTCHA to prevent bots and ensure that only legitimate users can submit public forms.
+
+2. **Integrate AWS SQS Bucket and Worker Service**:
+   - After uploading an image, the image will be sent to an AWS SQS queue.
+   - A worker service will process the image (e.g., resize it) and then upload the processed image back to the appropriate location (e.g., AWS S3 bucket or your desired storage).
+---
+
+## Contact
 For questions or feedback, reach out to:
 
 - Author: Md Safin Sarker
