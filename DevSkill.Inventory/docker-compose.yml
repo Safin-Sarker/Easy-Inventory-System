@@ -1,12 +1,35 @@
-version: "3"
+version: "3.8"
 services:
+  db:
+    build: 
+      context: .
+      dockerfile: DevSkill.Inventory.Db/Dockerfile
+    image: "inventory.sqlserver"
+    env_file: 
+      - DevSkill.Inventory.Db/db.env
+    expose: 
+      - "1432"
+    ports: 
+      - "1432:1433"
+    restart: always
+    networks:
+      - devskillinventory_network
+
   web:
     build: 
       context: .
       dockerfile: DevSkill.Inventory.Web/Dockerfile
-    image: inventory_image3
+    image: "inventory_web"
     env_file: 
-      - web.env
+      - DevSkill.Inventory.Web/web.env
     ports:
-      - "8001:80"
-    entrypoint: ["dotnet", "DevSkill.Inventory.Web.dll"]
+      - "8004:80"
+    depends_on:
+      - db
+    networks:
+      - devskillinventory_network
+    restart: always
+
+networks:
+  devskillinventory_network:
+    driver: bridge
