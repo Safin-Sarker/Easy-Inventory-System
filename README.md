@@ -47,16 +47,18 @@
 
 ## Technologies Used
 
-- **Framework:** ASP.NET Core
-- **Frontend:** Bootstrap, DataTables
+- **Framework:** ASP.NET Core MVC
+- **Frontend:** Bootstrap, DataTables, jQuery, Ajax, JavaScript
 - **Database:** SQL Server (with Entity Framework Core using Repository and Unit of Work pattern)
 - **Architecture:** Clean Architecture
-- **Testing:** NUnit (for service and model unit testing)
+- **Testing:** NUnit (for service unit testing)
 - **Containerization:** Docker
-- **Cloud Integration:** AWS S3 for storage, AWS Queue for task handling
-- **Security:** reCAPTCHA for public forms, claim-based authentication, and authorization
-- **Utilities:** AutoMapper, Autofac, logging, and exception handling
+- **Security:** Claim-based authentication, cookie-based authentication and authorization
+- **Utilities:** AutoMapper, Autofac, Serilog, and exception handling
 - **Performance:** Stored Procedures for optimized database operations
+- **Database Management:** AutoMigration
+- **Rich Text Editor:** TinyMCE
+- **Image Upload:** Cloudinary
 
 ---
 
@@ -67,9 +69,8 @@
 Ensure you have the following tools installed:
 
 - [.NET SDK](https://dotnet.microsoft.com/download)
-- [Docker](https://www.docker.com/)
-- SQL Server
-- AWS CLI (for AWS integration)
+- [Docker](https://www.docker.com/) (Optional: Only needed if you want to run the application in Docker)
+- **MSSQL** (SQL Server)
 
 ---
 
@@ -118,6 +119,7 @@ Ensure you have the following tools installed:
       ```csharp
       docker-compose up -d
     #### Option 2:  Use Prebuilt Images
+     - Go to My DockerHub Repository: [Easy Inventory System Docker Image](https://hub.docker.com/repository/docker/safinsarker/easy-inventory-system-image/general)       
      - Pull the prebuilt images from Docker Hub:
        ```bash
        docker pull safinsarker/easy-inventory-system-image:Web
@@ -148,7 +150,7 @@ Ensure you have the following tools installed:
         ```bash
         docker-compose up -d
 
-3. **Access the Application**
+4. **Access the Application**
    - **Locally**: http://localhost:5000
    - **Dockerized**: http://localhost:8001
    - **SuperAdmin user** can manage users, roles, and inventory from the admin dashboard.
