@@ -1,7 +1,6 @@
 # Easy Inventory System
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](link-to-ci-pipeline)
-[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 ## Table of Contents
 - [About the Project](#about-the-project)
