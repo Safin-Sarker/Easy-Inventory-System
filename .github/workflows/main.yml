@@ -16,25 +16,21 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v2
-
     - name: Set up .NET
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '8.0'
     
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ./DevSkill.Inventory/DevSkill.Inventory.Web/DevSkill.Inventory.Web.csproj
     
     - name: Build project
-      run: dotnet build --configuration Release
+      run: dotnet build ./DevSkill.Inventory/DevSkill.Inventory.Web/DevSkill.Inventory.Web.csproj --configuration Release
 
-    # Run unit tests only if there are test projects
     - name: Run unit tests
       run: |
         if [ -f "DevSkill.Inventory.Application.Tests/DevSkill.Inventory.Application.Tests.csproj" ]; then
-          dotnet test --configuration Release --no-build
+          dotnet test ./DevSkill.Inventory.Application.Tests/DevSkill.Inventory.Application.Tests.csproj --configuration Release --no-build
         else
           echo "No tests found, skipping test step"
         fi
