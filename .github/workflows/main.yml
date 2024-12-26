@@ -29,8 +29,8 @@ jobs:
 
     - name: Run unit tests
       run: |
-        if [ -f "DevSkill.Inventory.Application.Tests/DevSkill.Inventory.Application.Tests.csproj" ]; then
-          dotnet test ./DevSkill.Inventory.Application.Tests/DevSkill.Inventory.Application.Tests.csproj --configuration Release --no-build
+        if [ -f "DevSkill.Inventory/DevSkill.Inventory.Application.Tests/DevSkill.Inventory.Application.Tests.csproj" ]; then
+          dotnet test ./DevSkill.Inventory/DevSkill.Inventory.Application.Tests/DevSkill.Inventory.Application.Tests.csproj --configuration Release --no-build
         else
           echo "No tests found, skipping test step"
         fi
