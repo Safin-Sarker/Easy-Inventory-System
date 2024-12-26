@@ -24,8 +24,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./DevSkill.Inventory/DevSkill.Inventory.Web/DevSkill.Inventory.Web.csproj
     
+    - name: Clean previous builds
+      run: dotnet clean ./DevSkill.Inventory/DevSkill.Inventory.Application.Tests/DevSkill.Inventory.Application.Tests.csproj --configuration Release
+
     - name: Build project
       run: dotnet build ./DevSkill.Inventory/DevSkill.Inventory.Web/DevSkill.Inventory.Web.csproj --configuration Release
 
     - name: Run unit tests
-      run: dotnet test ./DevSkill.Inventory/DevSkill.Inventory.Application.Tests/DevSkill.Inventory.Application.Tests.csproj --configuration Release --no-build
+      run: dotnet test ./DevSkill.Inventory/DevSkill.Inventory.Application.Tests/DevSkill.Inventory.Application.Tests.csproj --configuration Release
