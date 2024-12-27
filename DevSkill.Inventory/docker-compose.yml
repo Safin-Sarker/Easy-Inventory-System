@@ -4,7 +4,7 @@ services:
     build: 
       context: .
       dockerfile: DevSkill.Inventory.Db/Dockerfile
-    image: "inventory.sqlserver"
+    image: "safinsarker/createi_mage_with_github_actions:database"  
     env_file: 
       - DevSkill.Inventory.Db/db.env
     expose: 
@@ -14,11 +14,12 @@ services:
     restart: always
     networks:
       - devskillinventory_network
+
   web:
     build: 
       context: .
       dockerfile: DevSkill.Inventory.Web/Dockerfile
-    image: "inventory_web"
+    image: "safinsarker/createi_mage_with_github_actions:web"  
     env_file: 
       - DevSkill.Inventory.Web/web.env
     ports:
@@ -28,6 +29,7 @@ services:
     networks:
       - devskillinventory_network
     restart: always
+
 networks:
   devskillinventory_network:
     driver: bridge
