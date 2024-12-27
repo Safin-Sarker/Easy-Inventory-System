@@ -44,13 +44,11 @@ jobs:
     - name: Build database Docker image
       run: |
         docker-compose -f DevSkill.Inventory/docker-compose.yml build db
-        docker tag safinsarker/createi_mage_with_github_actions:tagname safinsarker/createi_mage_with_github_actions:database
 
     # Build the web service Docker image
     - name: Build web Docker image
       run: |
         docker-compose -f DevSkill.Inventory/docker-compose.yml build web
-        docker tag safinsarker/createi_mage_with_github_actions:tagname safinsarker/createi_mage_with_github_actions:web
 
     # Push database image to DockerHub
     - name: Push database Docker image to DockerHub
