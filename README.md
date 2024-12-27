@@ -4,6 +4,7 @@
 
 ## Table of Contents
 - [About the Project](#about-the-project)
+- [Demo Videos](#demo-videos)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Getting Started](#getting-started)
@@ -22,6 +23,29 @@
 ## About the Project
 
 **Easy Inventory System** is a comprehensive inventory management solution designed to help users efficiently track products, inventories, and warehouses. The application emphasizes role-based and claim-based authorization while implementing clean architecture principles for scalability, maintainability, and testability.
+
+---
+
+## Demo Videos
+
+### Full Demo Video
+
+Check out the full demo of the **Easy Inventory System** below:
+
+[Full Demo Video](https://drive.google.com/file/d/1knXmkGj3z53mVa9EgZBPJCbnIOCWZicJ/view?usp=sharing "Watch Full Demo Video")
+
+
+> *Click  above to watch the full demo video .*
+
+---
+
+### Trailer/Short Demo Video
+
+Here's a short trailer of the **Easy Inventory System**:
+
+[Short Demo Video](https://drive.google.com/file/d/1FrlGbHD4T-tXeugJS8yVUQGtul6yLXPh/view?usp=sharing "Watch Short Demo Video")
+
+> *Click  above to watch the short demo video .*
 
 ---
 
@@ -44,6 +68,8 @@
 
 
 ---
+
+
 
 ## Technologies Used
 
