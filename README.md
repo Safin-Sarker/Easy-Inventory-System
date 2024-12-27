@@ -11,6 +11,7 @@
   - [Installation](#installation)
 - [Usage](#usage)
 - [Running Tests](#running-tests)
+- [Continuous Integration/Continuous Deployment(CI/CD)](#continuous-integrationcontinuous-deployment-cicd)
 - [Folder Structure](#folder-structure)
 - [Contributing](#contributing)
 - [Future Work](#future-work)
@@ -175,6 +176,25 @@ To run the tests for this project, follow these steps:
    ```bash
    dotnet test --logger "console;verbosity=detailed"
 ---
+
+## Continuous Integration/Continuous Deployment (CI/CD)
+
+The project integrates a CI/CD pipeline using **GitHub Actions** to automate testing, building, and Docker image pushing. Below is a summary:
+
+### Workflow Overview
+
+1. **Automated Testing**: Runs unit tests on every push to the repository.
+2. **Build Validation**: Validates the application build for the changes.
+3. **Docker Build and Push**: 
+   - Builds Docker images for the application.
+   - Pushes the Docker images to Docker Hub.
+
+### GitHub Actions Workflow File
+
+The CI/CD pipeline is defined in the `.github/workflows/main.yml` file.
+
+---
+
 
 ## Folder Structure
 
