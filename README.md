@@ -1,6 +1,7 @@
 # Easy Inventory System
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](link-to-ci-pipeline)
+[![Build Status](https://github.com/Safin-Sarker/Easy-Inventory-System/actions/workflows/main.yml/badge.svg)](https://github.com/Safin-Sarker/Easy-Inventory-System/actions/workflows/main.yml)
+
 
 ## Table of Contents
 - [About the Project](#about-the-project)
