@@ -261,7 +261,7 @@ Contributions are welcome! Follow these steps to contribute:
 ---
 ## Future Work
 
-1. **Adding reCAPTCHA for Public Forms**: 
+1. **Adding reCAPTCHA for Public**: 
    - Implement reCAPTCHA to prevent bots and ensure that only legitimate users can submit public forms.
 
 2. **Integrate AWS SQS Bucket and Worker Service**:
